@@ -2,6 +2,17 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">  
     
   <url>  
+    <loc>http://example.com/2023/09/18/%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A0/</loc>  
+      
+    <lastmod>2023-09-22T10:57:42.833Z</lastmod>  
+      
+    <date>1695037847000</date>  
+    <title>测试文章 | Nicole</title>  
+      
+    <desc></desc>  
+  </url>  
+    
+  <url>  
     <loc>http://example.com/about/index.html</loc>  
       
     <lastmod>2023-09-21T11:03:24.400Z</lastmod>  
@@ -41,17 +52,6 @@
       
     <date>1695100662000</date>  
     <title>categories | Nicole</title>  
-      
-    <desc></desc>  
-  </url>  
-    
-  <url>  
-    <loc>http://example.com/2023/09/18/%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A0/</loc>  
-      
-    <lastmod>2023-09-18T11:57:27.999Z</lastmod>  
-      
-    <date>1695037847000</date>  
-    <title>测试文章 | Nicole</title>  
       
     <desc></desc>  
   </url>  
