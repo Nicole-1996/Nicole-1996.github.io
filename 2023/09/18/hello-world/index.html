@@ -815,36 +815,29 @@
 
 
 
-
-<!-- LOCAL: You can save these files to your site and update links -->
-  
   <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
   <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
-<!-- END LOCAL -->
-    
-      <script type="text/javascript">
-      function renderGitalk(){
-        var gitalk = new Gitalk({
-            owner: 'Nicole-1996',
-            repo: 'blog_gitalk',
-            clientID: '3347760db7aeabfb1967',
-            clientSecret: '59f197f065187b60f71a56a87ad6e0ceeef49945',
-            admin: 'Nicole-1996',
-            
-              distractionFreeMode: 'true'
-            
-            });
-        gitalk.render('gitalk-container');
-      }
-      renderGitalk();
-      </script>
-    
- 
 
+  <script src="/js/src/md5.min.js"></script>
+
+   <script type="text/javascript">
+        var gitalk = new Gitalk({
+          clientID: '',
+          clientSecret: '',
+          repo: '',
+          owner: '',
+          admin: [''],
+
+          id: md5(location.pathname),
+
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')
+    </script>
 
 ————————————————
-版权声明：本文为CSDN博主「风来ll」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
-原文链接：https://blog.csdn.net/ytxw12/article/details/110350586
+版权声明：本文为CSDN博主「lzw2016」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
+原文链接：https://blog.csdn.net/lzw2016/article/details/83244906
 
   
 
