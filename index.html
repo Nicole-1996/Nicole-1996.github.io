@@ -410,7 +410,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  278
+                  551
                 </span>
               
 
@@ -426,7 +426,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  1
+                  2
                 </span>
               
             </div>
@@ -458,7 +458,11 @@
 <hr>
 <h3 id="提升模型性能"><a href="#提升模型性能" class="headerlink" title="提升模型性能"></a>提升模型性能</h3><h4 id="加入-BN-层"><a href="#加入-BN-层" class="headerlink" title="加入 BN 层"></a>加入 BN 层</h4><p>提升性能和收敛速度，防止过拟合。</p>
 <h4 id="High-Resolution-Classifier"><a href="#High-Resolution-Classifier" class="headerlink" title="High Resolution Classifier"></a>High Resolution Classifier</h4><p>YOLO 之前的训练方式是在 $224\times 224$ 的数据上用分类任务对模型预训练，然后迁移到 $448\times 448$ 图像的检测问题上。这会导致模型需要同时适应任务的变化和图像大小的变化。<br>在 YOLOv2 中，预训练好的分类模型先在输入大小为 $448\times 448$ 的图像分类任务上 finetune 10 个 epoch，finetune 后的模型用来对检测任务初始化。这样模型可以先适应高分辨率的图像，再迁移到同样分辨率的物体检测任务上。</p>
-<h4 id="Convolutional-With-Anchor-Boxes"><a href="#Convolutional-With-Anchor-Boxes" class="headerlink" title="Convolutional With Anchor Boxes"></a>Convolutional With Anchor Boxes</h4>
+<h4 id="Convolutional-With-Anchor-Boxes"><a href="#Convolutional-With-Anchor-Boxes" class="headerlink" title="Convolutional With Anchor Boxes"></a>Convolutional With Anchor Boxes</h4><p>借鉴了 R-CNN 系列的工作，将 anchor 引入模型的设计。网络由 YOLO 的对每个网格预测两组检测框和一个类别向量，改为对每个 anchor 分别预测位置和类别向量。<br>同时调整了输入图像大小，由 $448\times 448$ 调整为 $416\times 416$。这主要是因为作者观察发现有很多大物体中心落在图像中心，YOLOv2 的步长为 $32$，调整后 feature map 的大小为 $13\times 13$ 是奇数，能找到绝对的中心。</p>
+<h4 id="Dimension-Clusters"><a href="#Dimension-Clusters" class="headerlink" title="Dimension Clusters"></a>Dimension Clusters</h4><p>用 k-means 选择 anchor 的设计，并且用 $IOU$ 衡量 gt box 与聚类中心的距离。</p>
+<script type="math/tex; mode=display">
+d(box, centroid)=1−IOU(box, centroid)</script><p>anchor 数量越多意味着 gt box 与聚类中心越接近，训练会相对容易，也会取得更好的效果，在 YOLOv2 中为了平衡时间与性能，选取了 5 个 anchor。<br>论文里比较了采用聚类选择 anchor 和采用 Faster R-CNN 方法选择 anchor 的性能差异，可以看出用聚类产生的 anchor 对检测有比较明显的帮助。<br><img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2023-10-07%2017.23.54.png" width="60%" height="60%" /></p>
+
           
         
       
@@ -857,7 +861,7 @@ Loss&=\lambda_{coord}\sum_{i=0}^{S^2}\sum_{j=0}^{B}\mathbb{1}_{ij}^{obj}[(x_i-\h
     
       <span class="post-meta-item-text">站点总字数&#58;</span>
     
-    <span title="站点总字数">1.3k</span>
+    <span title="站点总字数">1.6k</span>
   
 </div>
 
