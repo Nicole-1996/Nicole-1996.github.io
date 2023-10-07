@@ -1,47 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>tags</title>
-    <url>/2023/09/21/tags/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>Hello World</title>
-    <url>/2023/09/18/hello-world/</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-]]></content>
-  </entry>
-  <entry>
-    <title>测试文章</title>
-    <url>/2023/09/18/%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A0/</url>
-    <content><![CDATA[<p>这是一篇测试文章</p>
-<img src="/2023/09/18/%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A0/test.png" class="" title="图片引用方法一">
-
-<p><img src="/test.png" alt="图片引用方法二"></p>
-<p><img src="/images/test.png" alt="图片引用方法三"></p>
+    <title>YOLO</title>
+    <url>/2023/09/27/YOLO/</url>
+    <content><![CDATA[<h3 id="论文信息"><a href="#论文信息" class="headerlink" title="论文信息"></a>论文信息</h3><p>标题：You Only Look Once: Unified, Real-Time Object Detection<br>会议：CVPR 2016<br>作者：Joseph Redmon, Santosh Divvala, Ross Girshick, Ali Farhadi<br>单位：University of Washington, Allen Institute for AI, Facebook AI Research<br>论文链接：<a href="https://www.cv-foundation.org/openaccess/content_cvpr_2016/papers/Redmon_You_Only_Look_CVPR_2016_paper.pdf">YOLO</a><br>项目链接：<a href="http://pjreddie.com/yolo/">YOLO: Real-Time Object Detection</a></p>
+<hr>
+<h3 id="Motivation"><a href="#Motivation" class="headerlink" title="Motivation"></a>Motivation</h3><p>此前取得较好结果的物体检测方法大多是多阶段的，这些方法比较复杂、速度慢而且难以单独优化。因此 YOLO 提出了一个 end-to-end 的单阶段物体检测方法，用于提升实时物体检测的性能。</p>
+<hr>
+<h3 id="优缺点"><a href="#优缺点" class="headerlink" title="优缺点"></a>优缺点</h3><h4 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h4><ol>
+<li>速度快。可以实时处理视频流，且精度远优于其他实时物体检测算法；</li>
+<li>误检的背景比较少。作者认为主要原因是 YOLO 没有采取划窗或 proposal 的方式，使得模型能利用更多上下文信息；</li>
+<li>泛化性好。</li>
+</ol>
+<h4 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h4><ol>
+<li>精度无法与最好的物体检测方法相比，精准定位能力较差，尤其对于小物体定位效果更差；</li>
+<li>在 YOLO 的设计框架下，无法对成群的小物体进行检测。</li>
+</ol>
+<hr>
+<h3 id="Method"><a href="#Method" class="headerlink" title="Method"></a>Method</h3><h4 id="整体思路"><a href="#整体思路" class="headerlink" title="整体思路"></a>整体思路</h4><ol>
+<li>整个图片被划分为 $S\times S$ 的网格，如果物体的中心落在某个网格里，则由该网格负责预测这个物体；</li>
+<li>每个格子预测 $B$ 个 bounding box 以及每个 box 的置信分数。YOLO 里面的置信分数不单是 bounding box 里包含物体的概率，而是被定义为 $Pr(Object)\times IOU_{pred}^{truth}$，即当格子里没有物体时，置信分数为 0，当格子里有物体时，希望得到的置信分数是检测框和 gound truth 之间的 IOU；</li>
+<li>对于每个 bounding box，预测值有 5 个，分别是表示检测框位置的 $x, y, w, h$ 以及置信分数；</li>
+<li>除了 $B$ 个 bounding box 的信息以外，每个格子还预测当前格子对应的物体类别；$Pr (Class_i|Object)$。需要注意的是类别预测是每个格子预测一组，而不是每个 bounding box 预测一组；</li>
+<li>测试时只需要把类别概率与每个 bounding box 的置信分数相乘，就可以得到每个 bounding box 在每个类别上的分数。<br><img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2023-09-28%2013.03.04.png" width="70%" height="70%" /></li>
+</ol>
+<h4 id="Network"><a href="#Network" class="headerlink" title="Network"></a>Network</h4><p>模型网络采用了 GoogleNet。<br><img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2023-09-28%2013.43.35.png" alt="截屏2023-09-28 13.43.35.png"></p>
+<h4 id="Loss-设计"><a href="#Loss-设计" class="headerlink" title="Loss 设计"></a>Loss 设计</h4><script type="math/tex; mode=display">
+\begin{align}
+Loss&=\lambda_{coord}\sum_{i=0}^{S^2}\sum_{j=0}^{B}\mathbb{1}_{ij}^{obj}[(x_i-\hat{x}_i)^2+(y_i-\hat{y}_i)^2]\\
+&+\lambda_{coord}\sum_{i=0}^{S^2}\sum_{j=0}^{B}\mathbb{1}_{ij}^{obj}[(\sqrt{w_i}-\sqrt{\hat{w}_i})^2+(\sqrt{h_i}-\sqrt{\hat{h}_i})^2]\\
+&+\sum_{i=0}^{S^2}\sum_{j=0}^{B}\mathbb{1}_{ij}^{obj}(C_i-\hat{C}_i)^2\\
+&+\lambda_{noobj}\sum_{i=0}^{S^2}\sum_{j=0}^{B}\mathbb{1}_{ij}^{noobj}(C_i-\hat{C}_i)^2\\
+&+\sum_{i=0}^{S^2}\mathbb{1}_{i}^{obj}\sum_{c\in classes}(p_i(c)-\hat{p}_i(c))^2
+\end{align}</script><ol>
+<li>实验中设置 $\lambda_{coord}=5, \lambda_{noobj}=0.5$ 是为了稳定训练，因为物体训练过程中大部分格子都没有物体，如果不设置权重，第四项 loss 会主导训练，使模型变得不稳定；</li>
+<li>第 2 项 loss 中用 box 宽、高的平方根相减计算误差，而非直接用宽、高的原始数值计算误差，是为了缓解大小物体之间的差异。同样的误差在大物体上远没有小物体上严重，因此 YOLO 采用平方根的方式缓解这种差异。</li>
+</ol>
+<hr>
+<h3 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h3><h4 id="与其他-real-time-检测方法比较"><a href="#与其他-real-time-检测方法比较" class="headerlink" title="与其他 real time 检测方法比较"></a>与其他 real time 检测方法比较</h4><ol>
+<li>YOLO 检测效果远高于之前的 real time 检测方法；</li>
+<li>检测性能低于非 real time 的检测方法。<br><img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2023-10-07%2013.31.59.png" width="70%" height="70%" /></li>
+</ol>
+<h4 id="YOLO-与-Faster-R-CNN-的错误分析"><a href="#YOLO-与-Faster-R-CNN-的错误分析" class="headerlink" title="YOLO 与 Faster R-CNN 的错误分析"></a>YOLO 与 Faster R-CNN 的错误分析</h4><p>文章中定义了 5 种不同的检测结果，并分析了 YOLO 和 Faster R-CNN 的检测结果中每种检测结果的占比：</p>
+<ol>
+<li>正确检出：$IOU&gt;0.5$ 且类别正确；</li>
+<li>定位错误：$0.1&lt;IOU&lt;0.5$ 且类别正确；</li>
+<li>相似：$IOU&gt;0.1$ 且类别相似；</li>
+<li>其他错误：$IOU&gt;0.1$ 且类别错误；</li>
+<li>检出背景：$IOU&lt;0.1$。</li>
+</ol>
+<p><img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2023-10-07%2013.41.11.png" width="70%" height="70%" /><br>可以看出，与 Faster R-CNN 相比，YOLO 检出的纯背景比例大幅减少，但定位错误比例更高。</p>
+<h4 id="在文艺作品数据集上"><a href="#在文艺作品数据集上" class="headerlink" title="在文艺作品数据集上"></a>在文艺作品数据集上</h4><p>YOLO 的泛化性优于其他方法，即使在风格差距比较大的数据集上也能保持不错的检测结果。<br><img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2023-10-07%2014.04.03.png" alt="截屏2023-10-07 14.04.03.png"></p>
 ]]></content>
       <categories>
-        <category>Java</category>
+        <category>论文解读</category>
+        <category>Object Detection</category>
+        <category>YOLO系列</category>
       </categories>
       <tags>
-        <tag>原创</tag>
+        <tag>论文解读</tag>
+        <tag>YOLO</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>模板test</title>
-    <url>/2023/09/25/%E6%A8%A1%E6%9D%BFtest/</url>
-    <content><![CDATA[]]></content>
   </entry>
 </search>
