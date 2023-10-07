@@ -3,7 +3,7 @@
   <entry>
     <title>YOLO</title>
     <url>/2023/09/27/YOLO/</url>
-    <content><![CDATA[<h3 id="论文信息"><a href="#论文信息" class="headerlink" title="论文信息"></a>论文信息</h3><p>标题：You Only Look Once: Unified, Real-Time Object Detection<br>会议：CVPR 2016<br>作者：Joseph Redmon, Santosh Divvala, Ross Girshick, Ali Farhadi<br>单位：University of Washington, Allen Institute for AI, Facebook AI Research<br>论文链接：<a href="https://www.cv-foundation.org/openaccess/content_cvpr_2016/papers/Redmon_You_Only_Look_CVPR_2016_paper.pdf">YOLO</a><br>项目链接：<a href="http://pjreddie.com/yolo/">YOLO: Real-Time Object Detection</a></p>
+    <content><![CDATA[<h3 id="论文信息"><a href="#论文信息" class="headerlink" title="论文信息"></a>论文信息</h3><p>标题：You Only Look Once: Unified, Real-Time Object Detection<br>会议：CVPR 2016<br>作者：Joseph Redmon, Santosh Divvala, Ross Girshick, Ali Farhadi<br>单位：University of Washington, Allen Institute for AI, Facebook AI Research<br>论文链接：<a href="https://www.cv-foundation.org/openaccess/content_cvpr_2016/papers/Redmon_You_Only_Look_CVPR_2016_paper.pdf">YOLO</a><br>项目链接：<a href="https://pjreddie.com/darknet/yolov1/">YOLO: Real-Time Object Detection</a></p>
 <hr>
 <h3 id="Motivation"><a href="#Motivation" class="headerlink" title="Motivation"></a>Motivation</h3><p>此前取得较好结果的物体检测方法大多是多阶段的，这些方法比较复杂、速度慢而且难以单独优化。因此 YOLO 提出了一个 end-to-end 的单阶段物体检测方法，用于提升实时物体检测的性能。</p>
 <hr>
@@ -52,6 +52,29 @@ Loss&=\lambda_{coord}\sum_{i=0}^{S^2}\sum_{j=0}^{B}\mathbb{1}_{ij}^{obj}[(x_i-\h
 <p><img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2023-10-07%2013.41.11.png" width="70%" height="70%" /><br>可以看出，与 Faster R-CNN 相比，YOLO 检出的纯背景比例大幅减少，但定位错误比例更高。</p>
 <h4 id="在文艺作品数据集上"><a href="#在文艺作品数据集上" class="headerlink" title="在文艺作品数据集上"></a>在文艺作品数据集上</h4><p>YOLO 的泛化性优于其他方法，即使在风格差距比较大的数据集上也能保持不错的检测结果。<br><img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2023-10-07%2014.04.03.png" alt="截屏2023-10-07 14.04.03.png"></p>
 ]]></content>
+      <categories>
+        <category>论文解读</category>
+        <category>Object Detection</category>
+        <category>YOLO系列</category>
+      </categories>
+      <tags>
+        <tag>论文解读</tag>
+        <tag>YOLO</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>YOLOv2 (YOLO9000)</title>
+    <url>/2023/10/07/YOLOv2%20(YOLO9000)/</url>
+    <content><![CDATA[<h3 id="论文信息"><a href="#论文信息" class="headerlink" title="论文信息"></a>论文信息</h3><p>标题：YOLO 9000: Better, Faster, Stronger<br>会议：CVPR 2017<br>作者：Joseph Redmon, Ali Farhadi<br>单位：University of Washington, Allen Institute for AI, XNOR. Ai<br>论文链接：<a href="https://openaccess.thecvf.com/content_cvpr_2017/papers/Redmon_YOLO9000_Better_Faster_CVPR_2017_paper.pdf">YOLO9000</a><br>项目链接：<a href="https://pjreddie.com/darknet/yolov2/">YOLO: Real-Time Object Detection</a></p>
+<hr>
+<h3 id="本文工作"><a href="#本文工作" class="headerlink" title="本文工作"></a>本文工作</h3><ol>
+<li>对 YOLO 框架进行改进，加入一些 trick 和调整，提升算法性能得到 YOLOv2；</li>
+<li>利用 ImageNet 数据集辅助训练，增加模型可以检出的类别数。</li>
+</ol>
+<hr>
+<h3 id="提升模型性能"><a href="#提升模型性能" class="headerlink" title="提升模型性能"></a>提升模型性能</h3><h4 id="加入-BN-层"><a href="#加入-BN-层" class="headerlink" title="加入 BN 层"></a>加入 BN 层</h4><p>提升性能和收敛速度，防止过拟合。</p>
+<h4 id="High-Resolution-Classifier"><a href="#High-Resolution-Classifier" class="headerlink" title="High Resolution Classifier"></a>High Resolution Classifier</h4><p>YOLO 之前的训练方式是在 $224\times 224$ 的数据上用分类任务对模型预训练，然后迁移到 $448\times 448$ 图像的检测问题上。这会导致模型需要同时适应任务的变化和图像大小的变化。<br>在 YOLOv2 中，预训练好的分类模型先在输入大小为 $448\times 448$ 的图像分类任务上 finetune 10 个 epoch，finetune 后的模型用来对检测任务初始化。这样模型可以先适应高分辨率的图像，再迁移到同样分辨率的物体检测任务上。</p>
+<h4 id="Convolutional-With-Anchor-Boxes"><a href="#Convolutional-With-Anchor-Boxes" class="headerlink" title="Convolutional With Anchor Boxes"></a>Convolutional With Anchor Boxes</h4>]]></content>
       <categories>
         <category>论文解读</category>
         <category>Object Detection</category>

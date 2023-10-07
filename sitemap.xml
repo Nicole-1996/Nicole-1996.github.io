@@ -2,9 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">  
     
   <url>  
+    <loc>http://example.com/2023/10/07/YOLOv2%20(YOLO9000)/</loc>  
+      
+    <lastmod>2023-10-07T08:46:13.686Z</lastmod>  
+      
+    <date>1696663682000</date>  
+    <title>YOLOv2 (YOLO9000) | Nicole</title>  
+      
+    <desc></desc>  
+  </url>  
+    
+  <url>  
     <loc>http://example.com/2023/09/27/YOLO/</loc>  
       
-    <lastmod>2023-10-07T06:04:59.309Z</lastmod>  
+    <lastmod>2023-10-07T07:09:12.499Z</lastmod>  
       
     <date>1695812810000</date>  
     <title>YOLO | Nicole</title>  
