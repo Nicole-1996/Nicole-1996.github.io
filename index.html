@@ -410,7 +410,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  919
+                  1.2k
                 </span>
               
 
@@ -426,7 +426,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  3
+                  4
                 </span>
               
             </div>
@@ -478,7 +478,21 @@ Pr(Object)\times IOU(b,object)&=\sigma(t_o)
 \end{align}</script><p><img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2023-10-07%2018.39.51.png" width="60%" height="60%" /></p>
 <h4 id="Fine-Grained-Features"><a href="#Fine-Grained-Features" class="headerlink" title="Fine-Grained Features"></a>Fine-Grained Features</h4><p>从多尺度检测方法借鉴的思路，利用高分辨率的 feature map 帮助小物体的检测。YOLOv2 直接将高分辨率的 feature map 调整一下 shape 和低分辨率的 feature map 拼接起来得到最终的 feature。例如在论文中，作者将 $26\times 26\times 512$ 的 feature 调整为 $13\times 13\times 2048$。</p>
 <h4 id="Multi-Scale-Training"><a href="#Multi-Scale-Training" class="headerlink" title="Multi-Scale Training"></a>Multi-Scale Training</h4><p>每 10 个 epoch 随机选择一次训练图像尺寸，最小为 $320\times 320$，最大为 $608\times 608$。</p>
-<p><span style="background:rgba(255, 183, 139, 0.55)">这里我有一点疑问，论文前面说选择 $416\times 416$ 保证 feature map 长度是奇数，但是这里的设置并没管最终 feature map 尺寸的奇偶，所以这个是不是并不重要？</span></p>
+<font color="#d8d8d8">这里我有一点疑问，论文前面说选择 416 保证 feature map 长度是奇数，但是这里的设置并没管最终 feature map 尺寸的奇偶，所以这个是不是并不重要？</font>
+
+<h4 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h4><h5 id="每个-trick-带来的提升"><a href="#每个-trick-带来的提升" class="headerlink" title="每个 trick 带来的提升"></a>每个 trick 带来的提升</h5><p><img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2023-10-08%2011.06.46.png" alt="截屏2023-10-08 11.06.46.png"></p>
+<h5 id="验证-YOLOv2-在同样的性能下速度最快"><a href="#验证-YOLOv2-在同样的性能下速度最快" class="headerlink" title="验证 YOLOv2 在同样的性能下速度最快"></a>验证 YOLOv2 在同样的性能下速度最快</h5><p><img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2023-10-08%2011.28.03.png" width="50%" height="50%" /><br><img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2023-10-08%2013.10.48.png" width="50%" height="50%" /></p>
+<h5 id="在-VOC-2012-和-COCO-上与其他算法比较"><a href="#在-VOC-2012-和-COCO-上与其他算法比较" class="headerlink" title="在 VOC 2012 和 COCO 上与其他算法比较"></a>在 VOC 2012 和 COCO 上与其他算法比较</h5><p><img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2023-10-08%2013.22.48.png" alt="截屏2023-10-08 13.22.48.png"></p>
+<hr>
+<h3 id="速度优化"><a href="#速度优化" class="headerlink" title="速度优化"></a>速度优化</h3><p>提出了一个需要更少运算量，且在分类任务上与 VGG16 结果相当的网络。<br><img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2023-10-08%2014.05.53.png" width="50%" height="50%" /></p>
+<hr>
+<h3 id="检测与分类共同训练"><a href="#检测与分类共同训练" class="headerlink" title="检测与分类共同训练"></a>检测与分类共同训练</h3><h4 id="基本思路"><a href="#基本思路" class="headerlink" title="基本思路"></a>基本思路</h4><p>将检测和分类数据一起用来训练，对于检测，按照 YOLOv2 的正常流程训练；对于分类数据，只训练分类 loss。</p>
+<h4 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h4><p>分类模型最终一层通常采用 softmax 结构，这需要所有标签是互斥的，但 COCO 和 ImageNet 两个数据集里的标签通常有一定包含关系，例如：COCO 里标签是狗，ImageNet 里是猎犬，因此直接用 softmax 是不行的。如果按照多标签来处理，就放弃了一些本来的信息，比如 ImageNet 的标签之间是互斥的。</p>
+<h4 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h4><p>采用分级标签，模型在每一级标签上用 softmax 处理预测概率，最终将每一级概率相乘得到最终结果。<br><img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2023-10-08%2015.06.35.png" width="50%" height="50%" /></p>
+<font color="#d8d8d8">这篇论文的写作有点糟糕，很多公式里面的符号都没有清晰的解释，很多应该讲的内容和实验也不是很全，更像一个对于 YOLO 的技术补充。</font>
+
+
+
 
           
         
@@ -878,7 +892,7 @@ Loss&=\lambda_{coord}\sum_{i=0}^{S^2}\sum_{j=0}^{B}\mathbb{1}_{ij}^{obj}[(x_i-\h
     
       <span class="post-meta-item-text">站点总字数&#58;</span>
     
-    <span title="站点总字数">2k</span>
+    <span title="站点总字数">2.3k</span>
   
 </div>
 
