@@ -303,6 +303,213 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/10/12/YOLOv3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Nicole">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2023/10/12/YOLOv3/" itemprop="url">YOLOv3</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-10-12T14:17:31+08:00">
+                2023-10-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%BA%E6%96%87%E8%A7%A3%E8%AF%BB/" itemprop="url" rel="index">
+                    <span itemprop="name">论文解读</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%BA%E6%96%87%E8%A7%A3%E8%AF%BB/Object-Detection/" itemprop="url" rel="index">
+                    <span itemprop="name">Object Detection</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%BA%E6%96%87%E8%A7%A3%E8%AF%BB/Object-Detection/YOLO%E7%B3%BB%E5%88%97/" itemprop="url" rel="index">
+                    <span itemprop="name">YOLO系列</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  625
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  2
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="论文信息"><a href="#论文信息" class="headerlink" title="论文信息"></a>论文信息</h3><p>标题：YOLOv3: An Incremental Improvement<br>作者：Joseph Redmon, Ali Farhadi<br>单位：University of Washington<br>论文链接：<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1804.02767.pdf">1804.02767.pdf</a><br>项目链接：<a target="_blank" rel="noopener" href="https://pjreddie.com/yolo/">YOLO: Real-Time Object Detection</a></p>
+<font color="#d8d8d8">准确来说这只是一篇技术报告，作者延续了 YOLOv2 的写作风格，非常随心所欲，对于阅读论文的人来说就会比较痛苦，强烈怀疑 v1 版本中间两个作者负责了主要的 writing 部分。</font>
+
+<hr>
+<h3 id="本文工作"><a href="#本文工作" class="headerlink" title="本文工作"></a>本文工作</h3><p>在上一版本的基础上，更换了模型结构，并进行了一些其他调整，使得模型在保持实时性的基础上，进一步提升了检测效果。</p>
+<hr>
+<h3 id="Method"><a href="#Method" class="headerlink" title="Method"></a>Method</h3><h4 id="模型整体结构"><a href="#模型整体结构" class="headerlink" title="模型整体结构"></a>模型整体结构</h4><p>论文作者并没有给出清晰易读的模型结构图，我在网络上看到了几个不同作者画的模型结构图，最早的应该是 <a target="_blank" rel="noopener" href="https://blog.csdn.net/leviopku/article/details/82660381">CSDN 上木盏给出的结构图</a>，但木盏大佬明确要求了转载需要取得作者的书面同意，但是我看了下评论，作者已经很久没回复评论里的申请了。因此引用了知乎作者江大白根据木盏给出的结构图，重新绘制的结构图（<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/143747206">深入浅出Yolo系列之Yolov3&amp;Yolov4&amp;Yolov5&amp;Yolox核心基础知识完整讲解 - 知乎</a>）。感谢对代码深入阅读的大佬们给出的结构图。</p>
+<p><img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/yolov3_1.png" alt="yolov3_1.png"></p>
+<p>从这个结构图可以看出 YOLOv3 相比于 YOLOv2 引入了类似 FPN 的多尺度结构，在不同尺度的 feature map 上分别进行检测。</p>
+<h4 id="其他调整"><a href="#其他调整" class="headerlink" title="其他调整"></a>其他调整</h4><h5 id="Bounding-Box-Prediction"><a href="#Bounding-Box-Prediction" class="headerlink" title="Bounding Box Prediction"></a>Bounding Box Prediction</h5><p>检测框的位置计算与 YOLOv2 的设置相同，但在置信度计算上，没有采用之前的用模型预测 IOU 的方式，而是采用了更常见也更简单的直接预测 0 或 1 的方式，并用 BCELoss 计算 loss。在 box prior 为与 gt 最接近的预设框时，label 为 1；如果 iou 大于阈值，但并不是最接近的，忽略；其余情况，label 为 0。YOLO 在训练时给每个 gt 仅分配一个预设框，希望最接近的框能检测到物体。</p>
+<h5 id="Class-Prediction"><a href="#Class-Prediction" class="headerlink" title="Class Prediction"></a>Class Prediction</h5><p>对每一类分别进行二分类，而非在所有类别上进行多分类。这主要是为了可拓展性，部分数据集的类别之间不是互斥的，多分类的方法并不适用。</p>
+<hr>
+<h3 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h3><h4 id="速度-准确性-trade-off"><a href="#速度-准确性-trade-off" class="headerlink" title="速度-准确性 trade off"></a>速度-准确性 trade off</h4><p>可以看到在差不多效果的情况下，YOLOv3 的速度优于 RetinaNet。<br><img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2023-10-13%2015.00.47.png" alt="截屏2023-10-13 15.00.47.png"></p>
+<h4 id=""><a href="#" class="headerlink" title=" "></a> </h4>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://example.com/2023/10/07/YOLOv2%20(YOLO9000)/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -816,7 +1023,7 @@ Loss&=\lambda_{coord}\sum_{i=0}^{S^2}\sum_{j=0}^{B}\mathbb{1}_{ij}^{obj}[(x_i-\h
               
                 <a href="/archives/%7C%7Carchive">
               
-                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-count">3</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -892,7 +1099,7 @@ Loss&=\lambda_{coord}\sum_{i=0}^{S^2}\sum_{j=0}^{B}\mathbb{1}_{ij}^{obj}[(x_i-\h
     
       <span class="post-meta-item-text">站点总字数&#58;</span>
     
-    <span title="站点总字数">2.3k</span>
+    <span title="站点总字数">2.9k</span>
   
 </div>
 
