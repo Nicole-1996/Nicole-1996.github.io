@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="论文解读,YOLO," />
+  <meta name="keywords" content="论文解读,YOLO,ObjectDetection," />
 
 
 
@@ -79,23 +79,20 @@
 
 
 
-<meta name="description" content="论文信息标题：YOLOv3: An Incremental Improvement作者：Joseph Redmon, Ali Farhadi单位：University of Washington论文链接：1804.02767.pdf项目链接：YOLO: Real-Time Object Detection   准确来说这只是一篇技术报告，作者延续了 YOLOv2 的写作风格，非常随心所欲，对于阅读">
+<meta name="description" content="论文信息 标题：YOLOv3: An Incremental Improvement 作者：Joseph Redmon, Ali Farhadi 单位：University of Washington 论文链接：1804.02767.pdf 项目链接：YOLO: Real-Time Object Detection 准确来说这只是一篇技术报告，作者延续了 YOLOv2 的写作风格，非常随心所欲，对">
 <meta property="og:type" content="article">
 <meta property="og:title" content="YOLOv3">
 <meta property="og:url" content="http://example.com/2023/10/12/YOLOv3/index.html">
 <meta property="og:site_name" content="Nicole">
-<meta property="og:description" content="论文信息标题：YOLOv3: An Incremental Improvement作者：Joseph Redmon, Ali Farhadi单位：University of Washington论文链接：1804.02767.pdf项目链接：YOLO: Real-Time Object Detection   准确来说这只是一篇技术报告，作者延续了 YOLOv2 的写作风格，非常随心所欲，对于阅读">
+<meta property="og:description" content="论文信息 标题：YOLOv3: An Incremental Improvement 作者：Joseph Redmon, Ali Farhadi 单位：University of Washington 论文链接：1804.02767.pdf 项目链接：YOLO: Real-Time Object Detection 准确来说这只是一篇技术报告，作者延续了 YOLOv2 的写作风格，非常随心所欲，对">
 <meta property="og:locale">
-<meta property="og:image" content="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/yolov3_1.png">
-<meta property="og:image" content="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2023-10-13%2015.00.47.png">
-<meta property="og:image" content="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2023-10-13%2016.28.29.png">
 <meta property="article:published_time" content="2023-10-12T06:17:31.000Z">
-<meta property="article:modified_time" content="2023-10-18T03:01:34.956Z">
+<meta property="article:modified_time" content="2023-12-28T07:37:37.595Z">
 <meta property="article:author" content="Nicole">
 <meta property="article:tag" content="论文解读">
 <meta property="article:tag" content="YOLO">
+<meta property="article:tag" content="ObjectDetection">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/yolov3_1.png">
 
 
 
@@ -422,7 +419,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  762
+                  764
                 </span>
               
 
@@ -459,21 +456,63 @@
       
 
       
-        <h3 id="论文信息"><a href="#论文信息" class="headerlink" title="论文信息"></a>论文信息</h3><p>标题：YOLOv3: An Incremental Improvement<br>作者：Joseph Redmon, Ali Farhadi<br>单位：University of Washington<br>论文链接：<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1804.02767.pdf">1804.02767.pdf</a><br>项目链接：<a target="_blank" rel="noopener" href="https://pjreddie.com/yolo/">YOLO: Real-Time Object Detection</a>  </p>
-<font color="#d8d8d8">准确来说这只是一篇技术报告，作者延续了 YOLOv2 的写作风格，非常随心所欲，对于阅读论文的人来说就会比较痛苦，强烈怀疑 v1 版本中间两个作者负责了主要的 writing 部分。</font>
-
-<hr>
-<h3 id="本文工作"><a href="#本文工作" class="headerlink" title="本文工作"></a>本文工作</h3><p>在上一版本的基础上，更换了模型结构，并进行了一些其他调整，使得模型在保持实时性的基础上，进一步提升了检测效果。</p>
-<hr>
-<h3 id="Method"><a href="#Method" class="headerlink" title="Method"></a>Method</h3><h4 id="模型整体结构"><a href="#模型整体结构" class="headerlink" title="模型整体结构"></a>模型整体结构</h4><p>论文作者并没有给出清晰易读的模型结构图，我在网络上看到了几个不同作者画的模型结构图，最早的应该是 <a target="_blank" rel="noopener" href="https://blog.csdn.net/leviopku/article/details/82660381">CSDN 上木盏给出的结构图</a>，但木盏大佬明确要求了转载需要取得作者的书面同意，但是我看了下评论，作者已经很久没回复评论里的申请了。因此引用了知乎作者江大白根据木盏给出的结构图，重新绘制的结构图（<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/143747206">深入浅出Yolo系列之Yolov3&amp;Yolov4&amp;Yolov5&amp;Yolox核心基础知识完整讲解 - 知乎</a>）。感谢对代码深入阅读的大佬们给出的结构图。</p>
-<p><img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/yolov3_1.png" alt="yolov3_1.png"></p>
-<p>从这个结构图可以看出 YOLOv3 相比于 YOLOv2 引入了类似 FPN 的多尺度结构，在不同尺度的 feature map 上分别进行检测。</p>
-<h4 id="其他调整"><a href="#其他调整" class="headerlink" title="其他调整"></a>其他调整</h4><h5 id="Bounding-Box-Prediction"><a href="#Bounding-Box-Prediction" class="headerlink" title="Bounding Box Prediction"></a>Bounding Box Prediction</h5><p>检测框的位置计算与 YOLOv2 的设置相同，但在置信度计算上，没有采用之前的用模型预测 IOU 的方式，而是采用了更常见也更简单的直接预测 0 或 1 的方式，并用 BCELoss 计算 loss。在 box prior 为与 gt 最接近的预设框时，label 为 1；如果 iou 大于阈值，但并不是最接近的，忽略；其余情况，label 为 0。YOLO 在训练时给每个 gt 仅分配一个预设框，希望最接近的框能检测到物体。</p>
-<h5 id="Class-Prediction"><a href="#Class-Prediction" class="headerlink" title="Class Prediction"></a>Class Prediction</h5><p>对每一类分别进行二分类，而非在所有类别上进行多分类。这主要是为了可拓展性，部分数据集的类别之间不是互斥的，多分类的方法并不适用。</p>
-<hr>
-<h3 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h3><h4 id="速度-准确性-trade-off"><a href="#速度-准确性-trade-off" class="headerlink" title="速度-准确性 trade off"></a>速度-准确性 trade off</h4><p>可以看到在差不多效果的情况下，YOLOv3 的速度优于 RetinaNet。<br><img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2023-10-13%2015.00.47.png" alt="截屏2023-10-13 15.00.47.png"></p>
-<h4 id="准确性"><a href="#准确性" class="headerlink" title="准确性"></a>准确性</h4><p>单纯比较 AP 的话，YOLOv3 与最好的 RetinaNet 比还是有一定差距。但可以看到这个差距在 $AP_{50}$ 时远低于 $AP_{75}$，说明 YOLOv3 与 YOLOv1 有相同的问题，可以检出但定位可能有偏差。<font color="#d8d8d8">这也意味着在实际应用上，如果任务是希望对检测物体有提示作用，并且比较速度，YOLO 系列的算法是一个很好的选择，但在对精度要求更高的任务上则需要准确率更高的算法。</font><br><img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2023-10-13%2016.28.29.png" alt="截屏2023-10-13 16.28.29.png"></p>
-
+        <h3 id="论文信息">论文信息</h3>
+<p>标题：YOLOv3: An Incremental Improvement<br />
+作者：Joseph Redmon, Ali Farhadi<br />
+单位：University of Washington<br />
+论文链接：<a
+target="_blank" rel="noopener" href="https://arxiv.org/pdf/1804.02767.pdf">1804.02767.pdf</a><br />
+项目链接：<a target="_blank" rel="noopener" href="https://pjreddie.com/yolo/">YOLO: Real-Time Object
+Detection</a></p>
+<p><font color="#d8d8d8">准确来说这只是一篇技术报告，作者延续了 YOLOv2
+的写作风格，非常随心所欲，对于阅读论文的人来说就会比较痛苦，强烈怀疑 v1
+版本中间两个作者负责了主要的 writing 部分。</font></p>
+<hr />
+<h3 id="本文工作">本文工作</h3>
+<p>在上一版本的基础上，更换了模型结构，并进行了一些其他调整，使得模型在保持实时性的基础上，进一步提升了检测效果。</p>
+<hr />
+<h3 id="method">Method</h3>
+<h4 id="模型整体结构">模型整体结构</h4>
+<p>论文作者并没有给出清晰易读的模型结构图，我在网络上看到了几个不同作者画的模型结构图，最早的应该是
+<a target="_blank" rel="noopener" href="https://blog.csdn.net/leviopku/article/details/82660381">CSDN
+上木盏给出的结构图</a>，但木盏大佬明确要求了转载需要取得作者的书面同意，但是我看了下评论，作者已经很久没回复评论里的申请了。因此引用了知乎作者江大白根据木盏给出的结构图，重新绘制的结构图（<a
+target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/143747206">深入浅出Yolo系列之Yolov3&amp;Yolov4&amp;Yolov5&amp;Yolox核心基础知识完整讲解
+- 知乎</a>）。感谢对代码深入阅读的大佬们给出的结构图。</p>
+<figure>
+<img
+src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/yolov3_1.png"
+alt="yolov3_1.png" />
+<figcaption aria-hidden="true">yolov3_1.png</figcaption>
+</figure>
+<p>从这个结构图可以看出 YOLOv3 相比于 YOLOv2 引入了类似 FPN
+的多尺度结构，在不同尺度的 feature map 上分别进行检测。</p>
+<h4 id="其他调整">其他调整</h4>
+<h5 id="bounding-box-prediction">Bounding Box Prediction</h5>
+<p>检测框的位置计算与 YOLOv2
+的设置相同，但在置信度计算上，没有采用之前的用模型预测 IOU
+的方式，而是采用了更常见也更简单的直接预测 0 或 1 的方式，并用 BCELoss
+计算 loss。在 box prior 为与 gt 最接近的预设框时，label 为 1；如果 iou
+大于阈值，但并不是最接近的，忽略；其余情况，label 为 0。YOLO
+在训练时给每个 gt 仅分配一个预设框，希望最接近的框能检测到物体。</p>
+<h5 id="class-prediction">Class Prediction</h5>
+<p>对每一类分别进行二分类，而非在所有类别上进行多分类。这主要是为了可拓展性，部分数据集的类别之间不是互斥的，多分类的方法并不适用。</p>
+<hr />
+<h3 id="实验结果">实验结果</h3>
+<h4 id="速度-准确性-trade-off">速度-准确性 trade off</h4>
+<p>可以看到在差不多效果的情况下，YOLOv3 的速度优于 RetinaNet。 <img
+src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2023-10-13%2015.00.47.png"
+alt="截屏2023-10-13 15.00.47.png" /></p>
+<h4 id="准确性">准确性</h4>
+<p>单纯比较 AP 的话，YOLOv3 与最好的 RetinaNet
+比还是有一定差距。但可以看到这个差距在 <span
+class="math inline">\(AP_{50}\)</span> 时远低于 <span
+class="math inline">\(AP_{75}\)</span>，说明 YOLOv3 与 YOLOv1
+有相同的问题，可以检出但定位可能有偏差。<font color="#d8d8d8">这也意味着在实际应用上，如果任务是希望对检测物体有提示作用，并且比较速度，YOLO
+系列的算法是一个很好的选择，但在对精度要求更高的任务上则需要准确率更高的算法。</font>
+<img
+src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2023-10-13%2016.28.29.png"
+alt="截屏2023-10-13 16.28.29.png" /></p>
+<link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>
       
     </div>
     
@@ -493,6 +532,8 @@
             <a href="/tags/%E8%AE%BA%E6%96%87%E8%A7%A3%E8%AF%BB/" rel="tag"># 论文解读</a>
           
             <a href="/tags/YOLO/" rel="tag"># YOLO</a>
+          
+            <a href="/tags/ObjectDetection/" rel="tag"># ObjectDetection</a>
           
         </div>
       
@@ -599,7 +640,7 @@
               
                 <a href="/archives/%7C%7Carchive">
               
-                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-count">6</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -610,7 +651,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -621,7 +662,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-count">9</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -654,7 +695,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BA%E6%96%87%E4%BF%A1%E6%81%AF"><span class="nav-number">1.</span> <span class="nav-text">论文信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%AC%E6%96%87%E5%B7%A5%E4%BD%9C"><span class="nav-number">2.</span> <span class="nav-text">本文工作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Method"><span class="nav-number">3.</span> <span class="nav-text">Method</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E6%95%B4%E4%BD%93%E7%BB%93%E6%9E%84"><span class="nav-number">3.1.</span> <span class="nav-text">模型整体结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E8%B0%83%E6%95%B4"><span class="nav-number">3.2.</span> <span class="nav-text">其他调整</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Bounding-Box-Prediction"><span class="nav-number">3.2.1.</span> <span class="nav-text">Bounding Box Prediction</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Class-Prediction"><span class="nav-number">3.2.2.</span> <span class="nav-text">Class Prediction</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C"><span class="nav-number">4.</span> <span class="nav-text">实验结果</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%9F%E5%BA%A6-%E5%87%86%E7%A1%AE%E6%80%A7-trade-off"><span class="nav-number">4.1.</span> <span class="nav-text">速度-准确性 trade off</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%87%86%E7%A1%AE%E6%80%A7"><span class="nav-number">4.2.</span> <span class="nav-text">准确性</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BA%E6%96%87%E4%BF%A1%E6%81%AF"><span class="nav-number">1.</span> <span class="nav-text">论文信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%AC%E6%96%87%E5%B7%A5%E4%BD%9C"><span class="nav-number">2.</span> <span class="nav-text">本文工作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#method"><span class="nav-number">3.</span> <span class="nav-text">Method</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E6%95%B4%E4%BD%93%E7%BB%93%E6%9E%84"><span class="nav-number">3.1.</span> <span class="nav-text">模型整体结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E8%B0%83%E6%95%B4"><span class="nav-number">3.2.</span> <span class="nav-text">其他调整</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#bounding-box-prediction"><span class="nav-number">3.2.1.</span> <span class="nav-text">Bounding Box Prediction</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#class-prediction"><span class="nav-number">3.2.2.</span> <span class="nav-text">Class Prediction</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C"><span class="nav-number">4.</span> <span class="nav-text">实验结果</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%9F%E5%BA%A6-%E5%87%86%E7%A1%AE%E6%80%A7-trade-off"><span class="nav-number">4.1.</span> <span class="nav-text">速度-准确性 trade off</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%87%86%E7%A1%AE%E6%80%A7"><span class="nav-number">4.2.</span> <span class="nav-text">准确性</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -677,7 +718,7 @@
         <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js">
 </script>
 
-<div class="copyright">&copy; <span itemprop="copyrightYear">2023</span>
+<div class="copyright">&copy; 2023 &mdash; <span itemprop="copyrightYear">2024</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
@@ -691,7 +732,7 @@
     
       <span class="post-meta-item-text">站点总字数&#58;</span>
     
-    <span title="站点总字数">4.9k</span>
+    <span title="站点总字数">5.3k</span>
   
 </div>
 

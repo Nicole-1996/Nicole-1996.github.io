@@ -3,55 +3,108 @@
   <entry>
     <title>YOLO</title>
     <url>/2023/09/27/YOLO/</url>
-    <content><![CDATA[<h3 id="论文信息"><a href="#论文信息" class="headerlink" title="论文信息"></a>论文信息</h3><p>标题：You Only Look Once: Unified, Real-Time Object Detection<br>会议：CVPR 2016<br>作者：Joseph Redmon, Santosh Divvala, Ross Girshick, Ali Farhadi<br>单位：University of Washington, Allen Institute for AI, Facebook AI Research<br>论文链接：<a href="https://www.cv-foundation.org/openaccess/content_cvpr_2016/papers/Redmon_You_Only_Look_CVPR_2016_paper.pdf">YOLO</a><br>项目链接：<a href="https://pjreddie.com/darknet/yolov1/">YOLO: Real-Time Object Detection</a>  </p>
-<hr>
-<h3 id="Motivation"><a href="#Motivation" class="headerlink" title="Motivation"></a>Motivation</h3><p>此前取得较好结果的物体检测方法大多是多阶段的，这些方法比较复杂、速度慢而且难以单独优化。因此 YOLO 提出了一个 end-to-end 的单阶段物体检测方法，用于提升实时物体检测的性能。</p>
-<hr>
-<h3 id="优缺点"><a href="#优缺点" class="headerlink" title="优缺点"></a>优缺点</h3><h4 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h4><ol>
+    <content><![CDATA[<h3 id="论文信息">论文信息</h3>
+<p>标题：You Only Look Once: Unified, Real-Time Object Detection<br />
+会议：CVPR 2016<br />
+作者：Joseph Redmon, Santosh Divvala, Ross Girshick, Ali Farhadi<br />
+单位：University of Washington, Allen Institute for AI, Facebook AI
+Research<br />
+论文链接：<a
+href="https://www.cv-foundation.org/openaccess/content_cvpr_2016/papers/Redmon_You_Only_Look_CVPR_2016_paper.pdf">YOLO</a><br />
+项目链接：<a href="https://pjreddie.com/darknet/yolov1/">YOLO: Real-Time
+Object Detection</a></p>
+<hr />
+<h3 id="motivation">Motivation</h3>
+<p>此前取得较好结果的物体检测方法大多是多阶段的，这些方法比较复杂、速度慢而且难以单独优化。因此
+YOLO 提出了一个 end-to-end
+的单阶段物体检测方法，用于提升实时物体检测的性能。</p>
+<hr />
+<h3 id="优缺点">优缺点</h3>
+<h4 id="优点">优点</h4>
+<ol type="1">
 <li>速度快。可以实时处理视频流，且精度远优于其他实时物体检测算法；</li>
-<li>误检的背景比较少。作者认为主要原因是 YOLO 没有采取划窗或 proposal 的方式，使得模型能利用更多上下文信息；</li>
+<li>误检的背景比较少。作者认为主要原因是 YOLO 没有采取划窗或 proposal
+的方式，使得模型能利用更多上下文信息；</li>
 <li>泛化性好。</li>
 </ol>
-<h4 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h4><ol>
+<h4 id="缺点">缺点</h4>
+<ol type="1">
 <li>精度无法与最好的物体检测方法相比，精准定位能力较差，尤其对于小物体定位效果更差；</li>
 <li>在 YOLO 的设计框架下，无法对成群的小物体进行检测。</li>
 </ol>
-<hr>
-<h3 id="Method"><a href="#Method" class="headerlink" title="Method"></a>Method</h3><h4 id="整体思路"><a href="#整体思路" class="headerlink" title="整体思路"></a>整体思路</h4><ol>
-<li>整个图片被划分为 $S\times S$ 的网格，如果物体的中心落在某个网格里，则由该网格负责预测这个物体；</li>
-<li>每个格子预测 $B$ 个 bounding box 以及每个 box 的置信分数。YOLO 里面的置信分数不单是 bounding box 里包含物体的概率，而是被定义为 $Pr(Object)\times IOU_{pred}^{truth}$，即当格子里没有物体时，置信分数为 0，当格子里有物体时，希望得到的置信分数是检测框和 gound truth 之间的 IOU；</li>
-<li>对于每个 bounding box，预测值有 5 个，分别是表示检测框位置的 $x, y, w, h$ 以及置信分数；</li>
-<li>除了 $B$ 个 bounding box 的信息以外，每个格子还预测当前格子对应的物体类别；$Pr (Class_i|Object)$。需要注意的是类别预测是每个格子预测一组，而不是每个 bounding box 预测一组；</li>
-<li>测试时只需要把类别概率与每个 bounding box 的置信分数相乘，就可以得到每个 bounding box 在每个类别上的分数。<br><img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2023-09-28%2013.03.04.png" width="70%" height="70%" /></li>
+<hr />
+<h3 id="method">Method</h3>
+<h4 id="整体思路">整体思路</h4>
+<ol type="1">
+<li>整个图片被划分为 <span class="math inline">\(S\times S\)</span>
+的网格，如果物体的中心落在某个网格里，则由该网格负责预测这个物体；</li>
+<li>每个格子预测 <span class="math inline">\(B\)</span> 个 bounding box
+以及每个 box 的置信分数。YOLO 里面的置信分数不单是 bounding box
+里包含物体的概率，而是被定义为 <span
+class="math inline">\(Pr(Object)\times
+IOU_{pred}^{truth}\)</span>，即当格子里没有物体时，置信分数为
+0，当格子里有物体时，希望得到的置信分数是检测框和 gound truth 之间的
+IOU；</li>
+<li>对于每个 bounding box，预测值有 5 个，分别是表示检测框位置的 <span
+class="math inline">\(x, y, w, h\)</span> 以及置信分数；</li>
+<li>除了 <span class="math inline">\(B\)</span> 个 bounding box
+的信息以外，每个格子还预测当前格子对应的物体类别；<span
+class="math inline">\(Pr
+(Class_i|Object)\)</span>。需要注意的是类别预测是每个格子预测一组，而不是每个
+bounding box 预测一组；</li>
+<li>测试时只需要把类别概率与每个 bounding box
+的置信分数相乘，就可以得到每个 bounding box 在每个类别上的分数。
+<img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2023-09-28%2013.03.04.png" width="70%" height="70%" /></li>
 </ol>
-<h4 id="Network"><a href="#Network" class="headerlink" title="Network"></a>Network</h4><p>模型网络采用了 GoogleNet。<br><img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2023-09-28%2013.43.35.png" alt="截屏2023-09-28 13.43.35.png"></p>
-<h4 id="Loss-设计"><a href="#Loss-设计" class="headerlink" title="Loss 设计"></a>Loss 设计</h4><script type="math/tex; mode=display">
+<h4 id="network">Network</h4>
+<p>模型网络采用了 GoogleNet。 <img
+src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2023-09-28%2013.43.35.png"
+alt="截屏2023-09-28 13.43.35.png" /></p>
+<h4 id="loss-设计">Loss 设计</h4>
+<p><span class="math display">\[
 \begin{align}
-Loss&=\lambda_{coord}\sum_{i=0}^{S^2}\sum_{j=0}^{B}\mathbb{1}_{ij}^{obj}[(x_i-\hat{x}_i)^2+(y_i-\hat{y}_i)^2]\\
-&+\lambda_{coord}\sum_{i=0}^{S^2}\sum_{j=0}^{B}\mathbb{1}_{ij}^{obj}[(\sqrt{w_i}-\sqrt{\hat{w}_i})^2+(\sqrt{h_i}-\sqrt{\hat{h}_i})^2]\\
-&+\sum_{i=0}^{S^2}\sum_{j=0}^{B}\mathbb{1}_{ij}^{obj}(C_i-\hat{C}_i)^2\\
-&+\lambda_{noobj}\sum_{i=0}^{S^2}\sum_{j=0}^{B}\mathbb{1}_{ij}^{noobj}(C_i-\hat{C}_i)^2\\
-&+\sum_{i=0}^{S^2}\mathbb{1}_{i}^{obj}\sum_{c\in classes}(p_i(c)-\hat{p}_i(c))^2
-\end{align}</script><ol>
-<li>实验中设置 $\lambda_{coord}=5, \lambda_{noobj}=0.5$ 是为了稳定训练，因为物体训练过程中大部分格子都没有物体，如果不设置权重，第四项 loss 会主导训练，使模型变得不稳定；</li>
-<li>第 2 项 loss 中用 box 宽、高的平方根相减计算误差，而非直接用宽、高的原始数值计算误差，是为了缓解大小物体之间的差异。同样的误差在大物体上远没有小物体上严重，因此 YOLO 采用平方根的方式缓解这种差异。</li>
-</ol>
-<hr>
-<h3 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h3><h4 id="与其他-real-time-检测方法比较"><a href="#与其他-real-time-检测方法比较" class="headerlink" title="与其他 real time 检测方法比较"></a>与其他 real time 检测方法比较</h4><ol>
+Loss&amp;=\lambda_{coord}\sum_{i=0}^{S^2}\sum_{j=0}^{B}\mathbb{1}_{ij}^{obj}[(x_i-\hat{x}_i)^2+(y_i-\hat{y}_i)^2]\\
+&amp;+\lambda_{coord}\sum_{i=0}^{S^2}\sum_{j=0}^{B}\mathbb{1}_{ij}^{obj}[(\sqrt{w_i}-\sqrt{\hat{w}_i})^2+(\sqrt{h_i}-\sqrt{\hat{h}_i})^2]\\
+&amp;+\sum_{i=0}^{S^2}\sum_{j=0}^{B}\mathbb{1}_{ij}^{obj}(C_i-\hat{C}_i)^2\\
+&amp;+\lambda_{noobj}\sum_{i=0}^{S^2}\sum_{j=0}^{B}\mathbb{1}_{ij}^{noobj}(C_i-\hat{C}_i)^2\\
+&amp;+\sum_{i=0}^{S^2}\mathbb{1}_{i}^{obj}\sum_{c\in
+classes}(p_i(c)-\hat{p}_i(c))^2
+\end{align}
+\]</span> 1. 实验中设置 <span class="math inline">\(\lambda_{coord}=5,
+\lambda_{noobj}=0.5\)</span>
+是为了稳定训练，因为物体训练过程中大部分格子都没有物体，如果不设置权重，第四项
+loss 会主导训练，使模型变得不稳定； 2. 第 2 项 loss 中用 box
+宽、高的平方根相减计算误差，而非直接用宽、高的原始数值计算误差，是为了缓解大小物体之间的差异。同样的误差在大物体上远没有小物体上严重，因此
+YOLO 采用平方根的方式缓解这种差异。</p>
+<hr />
+<h3 id="实验结果">实验结果</h3>
+<h4 id="与其他-real-time-检测方法比较">与其他 real time
+检测方法比较</h4>
+<ol type="1">
 <li>YOLO 检测效果远高于之前的 real time 检测方法；</li>
-<li>检测性能低于非 real time 的检测方法。<br><img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2023-10-07%2013.31.59.png" width="70%" height="70%" /></li>
+<li>检测性能低于非 real time 的检测方法。
+<img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2023-10-07%2013.31.59.png" width="70%" height="70%" /></li>
 </ol>
-<h4 id="YOLO-与-Faster-R-CNN-的错误分析"><a href="#YOLO-与-Faster-R-CNN-的错误分析" class="headerlink" title="YOLO 与 Faster R-CNN 的错误分析"></a>YOLO 与 Faster R-CNN 的错误分析</h4><p>文章中定义了 5 种不同的检测结果，并分析了 YOLO 和 Faster R-CNN 的检测结果中每种检测结果的占比：</p>
-<ol>
-<li>正确检出：$IOU&gt;0.5$ 且类别正确；</li>
-<li>定位错误：$0.1&lt;IOU&lt;0.5$ 且类别正确；</li>
-<li>相似：$IOU&gt;0.1$ 且类别相似；</li>
-<li>其他错误：$IOU&gt;0.1$ 且类别错误；</li>
-<li>检出背景：$IOU&lt;0.1$。</li>
-</ol>
-<p><img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2023-10-07%2013.41.11.png" width="70%" height="70%" /><br>可以看出，与 Faster R-CNN 相比，YOLO 检出的纯背景比例大幅减少，但定位错误比例更高。</p>
-<h4 id="在文艺作品数据集上"><a href="#在文艺作品数据集上" class="headerlink" title="在文艺作品数据集上"></a>在文艺作品数据集上</h4><p>YOLO 的泛化性优于其他方法，即使在风格差距比较大的数据集上也能保持不错的检测结果。<br><img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2023-10-07%2014.04.03.png" alt="截屏2023-10-07 14.04.03.png"></p>
-]]></content>
+<h4 id="yolo-与-faster-r-cnn-的错误分析">YOLO 与 Faster R-CNN
+的错误分析</h4>
+<p>文章中定义了 5 种不同的检测结果，并分析了 YOLO 和 Faster R-CNN
+的检测结果中每种检测结果的占比： 1. 正确检出：<span
+class="math inline">\(IOU&gt;0.5\)</span> 且类别正确； 2.
+定位错误：<span class="math inline">\(0.1&lt;IOU&lt;0.5\)</span>
+且类别正确； 3. 相似：<span class="math inline">\(IOU&gt;0.1\)</span>
+且类别相似； 4. 其他错误：<span
+class="math inline">\(IOU&gt;0.1\)</span> 且类别错误； 5.
+检出背景：<span class="math inline">\(IOU&lt;0.1\)</span>。</p>
+<p><img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2023-10-07%2013.41.11.png" width="70%" height="70%" />
+可以看出，与 Faster R-CNN 相比，YOLO
+检出的纯背景比例大幅减少，但定位错误比例更高。</p>
+<h4 id="在文艺作品数据集上">在文艺作品数据集上</h4>
+<p>YOLO
+的泛化性优于其他方法，即使在风格差距比较大的数据集上也能保持不错的检测结果。
+<img
+src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2023-10-07%2014.04.03.png"
+alt="截屏2023-10-07 14.04.03.png" /></p>
+<link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
       <categories>
         <category>论文解读</category>
         <category>Object Detection</category>
@@ -60,56 +113,131 @@ Loss&=\lambda_{coord}\sum_{i=0}^{S^2}\sum_{j=0}^{B}\mathbb{1}_{ij}^{obj}[(x_i-\h
       <tags>
         <tag>论文解读</tag>
         <tag>YOLO</tag>
+        <tag>ObjectDetection</tag>
       </tags>
   </entry>
   <entry>
     <title>YOLOv2 (YOLO9000)</title>
     <url>/2023/10/07/YOLOv2%20(YOLO9000)/</url>
-    <content><![CDATA[<h3 id="论文信息"><a href="#论文信息" class="headerlink" title="论文信息"></a>论文信息</h3><p>标题：YOLO 9000: Better, Faster, Stronger<br>会议：CVPR 2017<br>作者：Joseph Redmon, Ali Farhadi<br>单位：University of Washington, Allen Institute for AI, XNOR. Ai<br>论文链接：<a href="https://openaccess.thecvf.com/content_cvpr_2017/papers/Redmon_YOLO9000_Better_Faster_CVPR_2017_paper.pdf">YOLO9000</a><br>项目链接：<a href="https://pjreddie.com/darknet/yolov2/">YOLO: Real-Time Object Detection</a>  </p>
-<hr>
-<h3 id="本文工作"><a href="#本文工作" class="headerlink" title="本文工作"></a>本文工作</h3><ol>
-<li>对 YOLO 框架进行改进，加入一些 trick 和调整，提升算法性能得到 YOLOv2；</li>
+    <content><![CDATA[<h3 id="论文信息">论文信息</h3>
+<p>标题：YOLO 9000: Better, Faster, Stronger<br />
+会议：CVPR 2017<br />
+作者：Joseph Redmon, Ali Farhadi<br />
+单位：University of Washington, Allen Institute for AI, XNOR. Ai<br />
+论文链接：<a
+href="https://openaccess.thecvf.com/content_cvpr_2017/papers/Redmon_YOLO9000_Better_Faster_CVPR_2017_paper.pdf">YOLO9000</a><br />
+项目链接：<a href="https://pjreddie.com/darknet/yolov2/">YOLO: Real-Time
+Object Detection</a></p>
+<hr />
+<h3 id="本文工作">本文工作</h3>
+<ol type="1">
+<li>对 YOLO 框架进行改进，加入一些 trick 和调整，提升算法性能得到
+YOLOv2；</li>
 <li>利用 ImageNet 数据集辅助训练，增加模型可以检出的类别数。</li>
 </ol>
-<hr>
-<h3 id="提升模型性能"><a href="#提升模型性能" class="headerlink" title="提升模型性能"></a>提升模型性能</h3><h4 id="加入-BN-层"><a href="#加入-BN-层" class="headerlink" title="加入 BN 层"></a>加入 BN 层</h4><p>提升性能和收敛速度，防止过拟合。</p>
-<h4 id="High-Resolution-Classifier"><a href="#High-Resolution-Classifier" class="headerlink" title="High Resolution Classifier"></a>High Resolution Classifier</h4><p>YOLO 之前的训练方式是在 $224\times 224$ 的数据上用分类任务对模型预训练，然后迁移到 $448\times 448$ 图像的检测问题上。这会导致模型需要同时适应任务的变化和图像大小的变化。<br>在 YOLOv2 中，预训练好的分类模型先在输入大小为 $448\times 448$ 的图像分类任务上 finetune 10 个 epoch，finetune 后的模型用来对检测任务初始化。这样模型可以先适应高分辨率的图像，再迁移到同样分辨率的物体检测任务上。</p>
-<h4 id="Convolutional-With-Anchor-Boxes"><a href="#Convolutional-With-Anchor-Boxes" class="headerlink" title="Convolutional With Anchor Boxes"></a>Convolutional With Anchor Boxes</h4><p>借鉴了 R-CNN 系列的工作，将 anchor 引入模型的设计。网络由 YOLO 的对每个网格预测两组检测框和一个类别向量，改为对每个 anchor 分别预测位置和类别向量。<br>同时调整了输入图像大小，由 $448\times 448$ 调整为 $416\times 416$。这主要是因为作者观察发现有很多大物体中心落在图像中心，YOLOv2 的步长为 $32$，调整后 feature map 的大小为 $13\times 13$ 是奇数，能找到绝对的中心。</p>
-<h4 id="Dimension-Clusters"><a href="#Dimension-Clusters" class="headerlink" title="Dimension Clusters"></a>Dimension Clusters</h4><p>用 k-means 选择 anchor 的设计，并且用 $IOU$ 衡量 gt box 与聚类中心的距离。</p>
-<script type="math/tex; mode=display">
-d(box, centroid)=1−IOU(box, centroid)</script><p>anchor 数量越多意味着 gt box 与聚类中心越接近，训练会相对容易，也会取得更好的效果，在 YOLOv2 中为了平衡时间与性能，选取了 5 个 anchor。<br>论文里比较了采用聚类选择 anchor 和采用 Faster R-CNN 方法选择 anchor 的性能差异，可以看出用聚类产生的 anchor 对检测有比较明显的帮助。<br><img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2023-10-07%2017.23.54.png" width="60%" height="60%" /></p>
-<h4 id="Direct-location-prediction"><a href="#Direct-location-prediction" class="headerlink" title="Direct location prediction"></a>Direct location prediction</h4><p>之前设计的坐标预测方式为：</p>
-<script type="math/tex; mode=display">
+<hr />
+<h3 id="提升模型性能">提升模型性能</h3>
+<h4 id="加入-bn-层">加入 BN 层</h4>
+<p>提升性能和收敛速度，防止过拟合。</p>
+<h4 id="high-resolution-classifier">High Resolution Classifier</h4>
+<p>YOLO 之前的训练方式是在 <span class="math inline">\(224\times
+224\)</span> 的数据上用分类任务对模型预训练，然后迁移到 <span
+class="math inline">\(448\times 448\)</span>
+图像的检测问题上。这会导致模型需要同时适应任务的变化和图像大小的变化。
+在 YOLOv2 中，预训练好的分类模型先在输入大小为 <span
+class="math inline">\(448\times 448\)</span> 的图像分类任务上 finetune
+10 个 epoch，finetune
+后的模型用来对检测任务初始化。这样模型可以先适应高分辨率的图像，再迁移到同样分辨率的物体检测任务上。</p>
+<h4 id="convolutional-with-anchor-boxes">Convolutional With Anchor
+Boxes</h4>
+<p>借鉴了 R-CNN 系列的工作，将 anchor 引入模型的设计。网络由 YOLO
+的对每个网格预测两组检测框和一个类别向量，改为对每个 anchor
+分别预测位置和类别向量。 同时调整了输入图像大小，由 <span
+class="math inline">\(448\times 448\)</span> 调整为 <span
+class="math inline">\(416\times
+416\)</span>。这主要是因为作者观察发现有很多大物体中心落在图像中心，YOLOv2
+的步长为 <span class="math inline">\(32\)</span>，调整后 feature map
+的大小为 <span class="math inline">\(13\times 13\)</span>
+是奇数，能找到绝对的中心。</p>
+<h4 id="dimension-clusters">Dimension Clusters</h4>
+<p>用 k-means 选择 anchor 的设计，并且用 <span
+class="math inline">\(IOU\)</span> 衡量 gt box 与聚类中心的距离。 <span
+class="math display">\[
+d(box, centroid)=1−IOU(box, centroid)
+\]</span> anchor 数量越多意味着 gt box
+与聚类中心越接近，训练会相对容易，也会取得更好的效果，在 YOLOv2
+中为了平衡时间与性能，选取了 5 个 anchor。 论文里比较了采用聚类选择
+anchor 和采用 Faster R-CNN 方法选择 anchor
+的性能差异，可以看出用聚类产生的 anchor 对检测有比较明显的帮助。
+<img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2023-10-07%2017.23.54.png" width="60%" height="60%" /></p>
+<h4 id="direct-location-prediction">Direct location prediction</h4>
+<p>之前设计的坐标预测方式为： <span class="math display">\[
 \begin{align}
-x&=(t_x*w_a)+x_a\\
-y&=(t_y*h_a)+y_a\\
-\end{align}</script><p>即：模型预测 box 与 anchor 中心的偏移相对值，并且根据这个相对值计算最终的 box 坐标。<br>但是该方法可能遇到的问题是，$t_x$ 与 $t_y$ 可能预测为任何值，这会导致预测的检测框可能在图像的任何位置，从而在训练开始时训练比较不稳定。因此 YOLOv2 采取了预测检测框位置相对于格子左上角偏移的方法，并且用 $sigmoid$ 函数将偏移值归一化到 0、1 之间。</p>
-<script type="math/tex; mode=display">
+x&amp;=(t_x*w_a)+x_a\\
+y&amp;=(t_y*h_a)+y_a\\
+\end{align}
+\]</span> 即：模型预测 box 与 anchor
+中心的偏移相对值，并且根据这个相对值计算最终的 box 坐标。
+但是该方法可能遇到的问题是，<span class="math inline">\(t_x\)</span> 与
+<span class="math inline">\(t_y\)</span>
+可能预测为任何值，这会导致预测的检测框可能在图像的任何位置，从而在训练开始时训练比较不稳定。因此
+YOLOv2 采取了预测检测框位置相对于格子左上角偏移的方法，并且用 <span
+class="math inline">\(sigmoid\)</span> 函数将偏移值归一化到 0、1 之间。
+<span class="math display">\[
 \begin{align}
-b_x&=\sigma(t_x)+c_x \\
-b_y&=\sigma(t_y)+c_y \\
-b_w&=p_we^{t_w} \\
-b_h&=p_he^{t_h} \\
-Pr(Object)\times IOU(b,object)&=\sigma(t_o)
-\end{align}</script><p><img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2023-10-07%2018.39.51.png" width="60%" height="60%" /></p>
-<h4 id="Fine-Grained-Features"><a href="#Fine-Grained-Features" class="headerlink" title="Fine-Grained Features"></a>Fine-Grained Features</h4><p>从多尺度检测方法借鉴的思路，利用高分辨率的 feature map 帮助小物体的检测。YOLOv2 直接将高分辨率的 feature map 调整一下 shape 和低分辨率的 feature map 拼接起来得到最终的 feature。例如在论文中，作者将 $26\times 26\times 512$ 的 feature 调整为 $13\times 13\times 2048$。</p>
-<h4 id="Multi-Scale-Training"><a href="#Multi-Scale-Training" class="headerlink" title="Multi-Scale Training"></a>Multi-Scale Training</h4><p>每 10 个 epoch 随机选择一次训练图像尺寸，最小为 $320\times 320$，最大为 $608\times 608$。</p>
-<font color="#d8d8d8">这里我有一点疑问，论文前面说选择 416 保证 feature map 长度是奇数，但是这里的设置并没管最终 feature map 尺寸的奇偶，所以这个是不是并不重要？</font>
-
-<h4 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h4><h5 id="每个-trick-带来的提升"><a href="#每个-trick-带来的提升" class="headerlink" title="每个 trick 带来的提升"></a>每个 trick 带来的提升</h5><p><img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2023-10-08%2011.06.46.png" alt="截屏2023-10-08 11.06.46.png"></p>
-<h5 id="验证-YOLOv2-在同样的性能下速度最快"><a href="#验证-YOLOv2-在同样的性能下速度最快" class="headerlink" title="验证 YOLOv2 在同样的性能下速度最快"></a>验证 YOLOv2 在同样的性能下速度最快</h5><p><img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2023-10-08%2011.28.03.png" width="50%" height="50%" /><br><img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2023-10-08%2013.10.48.png" width="50%" height="50%" /></p>
-<h5 id="在-VOC-2012-和-COCO-上与其他算法比较"><a href="#在-VOC-2012-和-COCO-上与其他算法比较" class="headerlink" title="在 VOC 2012 和 COCO 上与其他算法比较"></a>在 VOC 2012 和 COCO 上与其他算法比较</h5><p><img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2023-10-08%2013.22.48.png" alt="截屏2023-10-08 13.22.48.png"></p>
-<hr>
-<h3 id="速度优化"><a href="#速度优化" class="headerlink" title="速度优化"></a>速度优化</h3><p>提出了一个需要更少运算量，且在分类任务上与 VGG16 结果相当的网络。<br><img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2023-10-08%2014.05.53.png" width="50%" height="50%" /></p>
-<hr>
-<h3 id="检测与分类共同训练"><a href="#检测与分类共同训练" class="headerlink" title="检测与分类共同训练"></a>检测与分类共同训练</h3><h4 id="基本思路"><a href="#基本思路" class="headerlink" title="基本思路"></a>基本思路</h4><p>将检测和分类数据一起用来训练，对于检测，按照 YOLOv2 的正常流程训练；对于分类数据，只训练分类 loss。</p>
-<h4 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h4><p>分类模型最终一层通常采用 softmax 结构，这需要所有标签是互斥的，但 COCO 和 ImageNet 两个数据集里的标签通常有一定包含关系，例如：COCO 里标签是狗，ImageNet 里是猎犬，因此直接用 softmax 是不行的。如果按照多标签来处理，就放弃了一些本来的信息，比如 ImageNet 的标签之间是互斥的。</p>
-<h4 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h4><p>采用分级标签，模型在每一级标签上用 softmax 处理预测概率，最终将每一级概率相乘得到最终结果。<br><img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2023-10-08%2015.06.35.png" width="50%" height="50%" /></p>
-<font color="#d8d8d8">这篇论文的写作有点糟糕，很多公式里面的符号都没有清晰的解释，很多应该讲的内容和实验也不是很全，更像一个对于 YOLO 的技术补充。</font>
-
-
-
-]]></content>
+b_x&amp;=\sigma(t_x)+c_x \\
+b_y&amp;=\sigma(t_y)+c_y \\
+b_w&amp;=p_we^{t_w} \\
+b_h&amp;=p_he^{t_h} \\
+Pr(Object)\times IOU(b,object)&amp;=\sigma(t_o)
+\end{align}
+\]</span>
+<img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2023-10-07%2018.39.51.png" width="60%" height="60%" /></p>
+<h4 id="fine-grained-features">Fine-Grained Features</h4>
+<p>从多尺度检测方法借鉴的思路，利用高分辨率的 feature map
+帮助小物体的检测。YOLOv2 直接将高分辨率的 feature map 调整一下 shape
+和低分辨率的 feature map 拼接起来得到最终的
+feature。例如在论文中，作者将 <span class="math inline">\(26\times
+26\times 512\)</span> 的 feature 调整为 <span
+class="math inline">\(13\times 13\times 2048\)</span>。</p>
+<h4 id="multi-scale-training">Multi-Scale Training</h4>
+<p>每 10 个 epoch 随机选择一次训练图像尺寸，最小为 <span
+class="math inline">\(320\times 320\)</span>，最大为 <span
+class="math inline">\(608\times 608\)</span>。</p>
+<p><font color="#d8d8d8">这里我有一点疑问，论文前面说选择 416 保证
+feature map 长度是奇数，但是这里的设置并没管最终 feature map
+尺寸的奇偶，所以这个是不是并不重要？</font></p>
+<h4 id="实验结果">实验结果</h4>
+<h5 id="每个-trick-带来的提升">每个 trick 带来的提升</h5>
+<p><img
+src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2023-10-08%2011.06.46.png"
+alt="截屏2023-10-08 11.06.46.png" /> ##### 验证 YOLOv2
+在同样的性能下速度最快
+<img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2023-10-08%2011.28.03.png" width="50%" height="50%" />
+<img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2023-10-08%2013.10.48.png" width="50%" height="50%" />
+##### 在 VOC 2012 和 COCO 上与其他算法比较 <img
+src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2023-10-08%2013.22.48.png"
+alt="截屏2023-10-08 13.22.48.png" /></p>
+<hr />
+<h3 id="速度优化">速度优化</h3>
+<p>提出了一个需要更少运算量，且在分类任务上与 VGG16 结果相当的网络。
+<img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2023-10-08%2014.05.53.png" width="50%" height="50%" />
+*** ### 检测与分类共同训练 #### 基本思路
+将检测和分类数据一起用来训练，对于检测，按照 YOLOv2
+的正常流程训练；对于分类数据，只训练分类 loss。</p>
+<h4 id="遇到的问题">遇到的问题</h4>
+<p>分类模型最终一层通常采用 softmax 结构，这需要所有标签是互斥的，但
+COCO 和 ImageNet 两个数据集里的标签通常有一定包含关系，例如：COCO
+里标签是狗，ImageNet 里是猎犬，因此直接用 softmax
+是不行的。如果按照多标签来处理，就放弃了一些本来的信息，比如 ImageNet
+的标签之间是互斥的。</p>
+<h4 id="解决方案">解决方案</h4>
+<p>采用分级标签，模型在每一级标签上用 softmax
+处理预测概率，最终将每一级概率相乘得到最终结果。
+<img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2023-10-08%2015.06.35.png" width="50%" height="50%" /></p>
+<p><font color="#d8d8d8">这篇论文的写作有点糟糕，很多公式里面的符号都没有清晰的解释，很多应该讲的内容和实验也不是很全，更像一个对于
+YOLO 的技术补充。</font></p>
+<link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
       <categories>
         <category>论文解读</category>
         <category>Object Detection</category>
@@ -118,26 +246,69 @@ Pr(Object)\times IOU(b,object)&=\sigma(t_o)
       <tags>
         <tag>论文解读</tag>
         <tag>YOLO</tag>
+        <tag>ObjectDetection</tag>
       </tags>
   </entry>
   <entry>
     <title>YOLOv3</title>
     <url>/2023/10/12/YOLOv3/</url>
-    <content><![CDATA[<h3 id="论文信息"><a href="#论文信息" class="headerlink" title="论文信息"></a>论文信息</h3><p>标题：YOLOv3: An Incremental Improvement<br>作者：Joseph Redmon, Ali Farhadi<br>单位：University of Washington<br>论文链接：<a href="https://arxiv.org/pdf/1804.02767.pdf">1804.02767.pdf</a><br>项目链接：<a href="https://pjreddie.com/yolo/">YOLO: Real-Time Object Detection</a>  </p>
-<font color="#d8d8d8">准确来说这只是一篇技术报告，作者延续了 YOLOv2 的写作风格，非常随心所欲，对于阅读论文的人来说就会比较痛苦，强烈怀疑 v1 版本中间两个作者负责了主要的 writing 部分。</font>
-
-<hr>
-<h3 id="本文工作"><a href="#本文工作" class="headerlink" title="本文工作"></a>本文工作</h3><p>在上一版本的基础上，更换了模型结构，并进行了一些其他调整，使得模型在保持实时性的基础上，进一步提升了检测效果。</p>
-<hr>
-<h3 id="Method"><a href="#Method" class="headerlink" title="Method"></a>Method</h3><h4 id="模型整体结构"><a href="#模型整体结构" class="headerlink" title="模型整体结构"></a>模型整体结构</h4><p>论文作者并没有给出清晰易读的模型结构图，我在网络上看到了几个不同作者画的模型结构图，最早的应该是 <a href="https://blog.csdn.net/leviopku/article/details/82660381">CSDN 上木盏给出的结构图</a>，但木盏大佬明确要求了转载需要取得作者的书面同意，但是我看了下评论，作者已经很久没回复评论里的申请了。因此引用了知乎作者江大白根据木盏给出的结构图，重新绘制的结构图（<a href="https://zhuanlan.zhihu.com/p/143747206">深入浅出Yolo系列之Yolov3&amp;Yolov4&amp;Yolov5&amp;Yolox核心基础知识完整讲解 - 知乎</a>）。感谢对代码深入阅读的大佬们给出的结构图。</p>
-<p><img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/yolov3_1.png" alt="yolov3_1.png"></p>
-<p>从这个结构图可以看出 YOLOv3 相比于 YOLOv2 引入了类似 FPN 的多尺度结构，在不同尺度的 feature map 上分别进行检测。</p>
-<h4 id="其他调整"><a href="#其他调整" class="headerlink" title="其他调整"></a>其他调整</h4><h5 id="Bounding-Box-Prediction"><a href="#Bounding-Box-Prediction" class="headerlink" title="Bounding Box Prediction"></a>Bounding Box Prediction</h5><p>检测框的位置计算与 YOLOv2 的设置相同，但在置信度计算上，没有采用之前的用模型预测 IOU 的方式，而是采用了更常见也更简单的直接预测 0 或 1 的方式，并用 BCELoss 计算 loss。在 box prior 为与 gt 最接近的预设框时，label 为 1；如果 iou 大于阈值，但并不是最接近的，忽略；其余情况，label 为 0。YOLO 在训练时给每个 gt 仅分配一个预设框，希望最接近的框能检测到物体。</p>
-<h5 id="Class-Prediction"><a href="#Class-Prediction" class="headerlink" title="Class Prediction"></a>Class Prediction</h5><p>对每一类分别进行二分类，而非在所有类别上进行多分类。这主要是为了可拓展性，部分数据集的类别之间不是互斥的，多分类的方法并不适用。</p>
-<hr>
-<h3 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h3><h4 id="速度-准确性-trade-off"><a href="#速度-准确性-trade-off" class="headerlink" title="速度-准确性 trade off"></a>速度-准确性 trade off</h4><p>可以看到在差不多效果的情况下，YOLOv3 的速度优于 RetinaNet。<br><img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2023-10-13%2015.00.47.png" alt="截屏2023-10-13 15.00.47.png"></p>
-<h4 id="准确性"><a href="#准确性" class="headerlink" title="准确性"></a>准确性</h4><p>单纯比较 AP 的话，YOLOv3 与最好的 RetinaNet 比还是有一定差距。但可以看到这个差距在 $AP_{50}$ 时远低于 $AP_{75}$，说明 YOLOv3 与 YOLOv1 有相同的问题，可以检出但定位可能有偏差。<font color="#d8d8d8">这也意味着在实际应用上，如果任务是希望对检测物体有提示作用，并且比较速度，YOLO 系列的算法是一个很好的选择，但在对精度要求更高的任务上则需要准确率更高的算法。</font><br><img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2023-10-13%2016.28.29.png" alt="截屏2023-10-13 16.28.29.png"></p>
-]]></content>
+    <content><![CDATA[<h3 id="论文信息">论文信息</h3>
+<p>标题：YOLOv3: An Incremental Improvement<br />
+作者：Joseph Redmon, Ali Farhadi<br />
+单位：University of Washington<br />
+论文链接：<a
+href="https://arxiv.org/pdf/1804.02767.pdf">1804.02767.pdf</a><br />
+项目链接：<a href="https://pjreddie.com/yolo/">YOLO: Real-Time Object
+Detection</a></p>
+<p><font color="#d8d8d8">准确来说这只是一篇技术报告，作者延续了 YOLOv2
+的写作风格，非常随心所欲，对于阅读论文的人来说就会比较痛苦，强烈怀疑 v1
+版本中间两个作者负责了主要的 writing 部分。</font></p>
+<hr />
+<h3 id="本文工作">本文工作</h3>
+<p>在上一版本的基础上，更换了模型结构，并进行了一些其他调整，使得模型在保持实时性的基础上，进一步提升了检测效果。</p>
+<hr />
+<h3 id="method">Method</h3>
+<h4 id="模型整体结构">模型整体结构</h4>
+<p>论文作者并没有给出清晰易读的模型结构图，我在网络上看到了几个不同作者画的模型结构图，最早的应该是
+<a href="https://blog.csdn.net/leviopku/article/details/82660381">CSDN
+上木盏给出的结构图</a>，但木盏大佬明确要求了转载需要取得作者的书面同意，但是我看了下评论，作者已经很久没回复评论里的申请了。因此引用了知乎作者江大白根据木盏给出的结构图，重新绘制的结构图（<a
+href="https://zhuanlan.zhihu.com/p/143747206">深入浅出Yolo系列之Yolov3&amp;Yolov4&amp;Yolov5&amp;Yolox核心基础知识完整讲解
+- 知乎</a>）。感谢对代码深入阅读的大佬们给出的结构图。</p>
+<figure>
+<img
+src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/yolov3_1.png"
+alt="yolov3_1.png" />
+<figcaption aria-hidden="true">yolov3_1.png</figcaption>
+</figure>
+<p>从这个结构图可以看出 YOLOv3 相比于 YOLOv2 引入了类似 FPN
+的多尺度结构，在不同尺度的 feature map 上分别进行检测。</p>
+<h4 id="其他调整">其他调整</h4>
+<h5 id="bounding-box-prediction">Bounding Box Prediction</h5>
+<p>检测框的位置计算与 YOLOv2
+的设置相同，但在置信度计算上，没有采用之前的用模型预测 IOU
+的方式，而是采用了更常见也更简单的直接预测 0 或 1 的方式，并用 BCELoss
+计算 loss。在 box prior 为与 gt 最接近的预设框时，label 为 1；如果 iou
+大于阈值，但并不是最接近的，忽略；其余情况，label 为 0。YOLO
+在训练时给每个 gt 仅分配一个预设框，希望最接近的框能检测到物体。</p>
+<h5 id="class-prediction">Class Prediction</h5>
+<p>对每一类分别进行二分类，而非在所有类别上进行多分类。这主要是为了可拓展性，部分数据集的类别之间不是互斥的，多分类的方法并不适用。</p>
+<hr />
+<h3 id="实验结果">实验结果</h3>
+<h4 id="速度-准确性-trade-off">速度-准确性 trade off</h4>
+<p>可以看到在差不多效果的情况下，YOLOv3 的速度优于 RetinaNet。 <img
+src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2023-10-13%2015.00.47.png"
+alt="截屏2023-10-13 15.00.47.png" /></p>
+<h4 id="准确性">准确性</h4>
+<p>单纯比较 AP 的话，YOLOv3 与最好的 RetinaNet
+比还是有一定差距。但可以看到这个差距在 <span
+class="math inline">\(AP_{50}\)</span> 时远低于 <span
+class="math inline">\(AP_{75}\)</span>，说明 YOLOv3 与 YOLOv1
+有相同的问题，可以检出但定位可能有偏差。<font color="#d8d8d8">这也意味着在实际应用上，如果任务是希望对检测物体有提示作用，并且比较速度，YOLO
+系列的算法是一个很好的选择，但在对精度要求更高的任务上则需要准确率更高的算法。</font>
+<img
+src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2023-10-13%2016.28.29.png"
+alt="截屏2023-10-13 16.28.29.png" /></p>
+<link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
       <categories>
         <category>论文解读</category>
         <category>Object Detection</category>
@@ -146,6 +317,7 @@ Pr(Object)\times IOU(b,object)&=\sigma(t_o)
       <tags>
         <tag>论文解读</tag>
         <tag>YOLO</tag>
+        <tag>ObjectDetection</tag>
       </tags>
   </entry>
   <entry>
@@ -191,6 +363,8 @@ Pr(Object)\times IOU(b,object)&=\sigma(t_o)
 </div>
 <link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
       <categories>
+        <category>生活随笔</category>
+        <category>读书笔记</category>
         <category>推理小说</category>
         <category>密室</category>
       </categories>
@@ -241,9 +415,103 @@ vacation，带入语境感觉是个小玩笑，然后才说了他们未来的比
       <categories>
         <category>生活随笔</category>
         <category>观赛体验</category>
+        <category>花样滑冰</category>
       </categories>
       <tags>
         <tag>花样滑冰</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Qwen-VL</title>
+    <url>/2024/01/04/Qwen-VL/</url>
+    <content><![CDATA[<h3 id="Qwen-VL-与-Qwen-LM-相比的改进"><a href="#Qwen-VL-与-Qwen-LM-相比的改进" class="headerlink" title="Qwen-VL 与 Qwen-LM 相比的改进"></a>Qwen-VL 与 Qwen-LM 相比的改进</h3><ul>
+<li>Visual receptor</li>
+<li>Input-output interface</li>
+<li>3-stage training pipeline</li>
+<li>Multilingual multimodal cleaned corpus</li>
+</ul>
+<hr>
+<h3 id="模型构成"><a href="#模型构成" class="headerlink" title="模型构成"></a>模型构成</h3><ul>
+<li>LLM: Qwen-7 B</li>
+<li>Visual Encoder: ViT</li>
+<li>VL Adapter: single-layer cross-attention module initialized randomly<ul>
+<li>A group of trainable vectors (Embeddings) as query vectors</li>
+<li>The image features from the visual encoder as keys</li>
+<li>This mechanism compresses the visual feature sequence to a fixed length of 256</li>
+<li>2 D absolute positional encodings are incorporated into the cross-attention mechanism’s query-key pairs</li>
+<li>The compressed image feature sequence of length 256 is subsequently fed into the large language model</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="Qwen-LM-的输入"><a href="#Qwen-LM-的输入" class="headerlink" title="Qwen LM 的输入"></a>Qwen LM 的输入</h3><ul>
+<li>图像特征<ul>
+<li>VL adapter 输出的特征，前后加上\<img\>和\&lt;/img>表明图像特征的开始和结束</li>
+</ul>
+</li>
+<li>Bounding box<ul>
+<li>本文希望模型能更细粒度地理解图像，因此设计了涉及 bounding box 的任务，例如框定一个区域由模型进行描述</li>
+<li>训练时 bounding box 由字符串格式的 $(X_{topleft},Y_{topleft}),(X_{bottomright},Y_{bottomright})$ 提供，前后加上\<box\>和\&lt;/box></li>
+<li>在文本中加入\<ref\>和\&lt;/ref>，表明 bounding box 对应的文本</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="训练"><a href="#训练" class="headerlink" title="训练"></a>训练</h3><ul>
+<li>训练流程<ul>
+<li><img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%25E6%2588%25AA%25E5%25B1%258F2024-01-02%252018.29.42.png" alt="截屏2024-01-02 18.29.42.png"></li>
+</ul>
+</li>
+<li>预训练<ul>
+<li>仅训练 ViT 和 VL adapter</li>
+<li>训练数据共 14 亿图像-文本对，英语数据占 77.3%，中文数据占 22.7%</li>
+<li>The training objective is to minimize the cross-entropy of the text tokens. <font color="#a5a5a5">这个 loss 是什么意思</font></li>
+</ul>
+</li>
+<li>多任务训练<ul>
+<li>在 7 个任务上进行训练，模型的各个部分都参与训练<ul>
+<li><img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%25E6%2588%25AA%25E5%25B1%258F2024-01-02%252019.00.20.png" alt="截屏2024-01-02 19.00.20.png"></li>
+</ul>
+</li>
+<li>图像尺寸由 $224\times 224$ 调整到 $448\times 448$</li>
+</ul>
+</li>
+<li>Supervised Fine-tuning<ul>
+<li>优化对话能力，fine-tune 后的结果是 Qwen-VL-Chat</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h3><ul>
+<li>Image Caption and General Visual Question Answering<ul>
+<li><img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%25E6%2588%25AA%25E5%25B1%258F2024-01-03%252013.44.23.png" alt="截屏2024-01-03 13.44.23.png"></li>
+</ul>
+</li>
+<li>Text-oriented Visual Question Answering<ul>
+<li><img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%25E6%2588%25AA%25E5%25B1%258F2024-01-03%252013.47.56.png" alt="截屏2024-01-03 13.47.56.png"></li>
+</ul>
+</li>
+<li>Refer Expression Comprehension<ul>
+<li><img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%25E6%2588%25AA%25E5%25B1%258F2024-01-03%252013.50.18.png" alt="截屏2024-01-03 13.50.18.png"></li>
+</ul>
+</li>
+<li>Few-shot Learning on Vision-Language Tasks<ul>
+<li><img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%25E6%2588%25AA%25E5%25B1%258F2024-01-03%252013.52.41.png" alt="截屏2024-01-03 13.52.41.png"></li>
+</ul>
+</li>
+<li>Instruction Following in Real-world User Behavior<ul>
+<li><img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%25E6%2588%25AA%25E5%25B1%258F2024-01-03%252013.54.40.png" alt="截屏2024-01-03 13.54.40.png"></li>
+</ul>
+</li>
+</ul>
+<link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
+      <categories>
+        <category>论文解读</category>
+        <category>大模型</category>
+      </categories>
+      <tags>
+        <tag>论文解读</tag>
+        <tag>大模型</tag>
       </tags>
   </entry>
 </search>
