@@ -303,6 +303,253 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/01/06/DETR/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Nicole">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2024/01/06/DETR/" itemprop="url">DETR</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-01-06T17:03:18+08:00">
+                2024-01-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%BA%E6%96%87%E8%A7%A3%E8%AF%BB/" itemprop="url" rel="index">
+                    <span itemprop="name">论文解读</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%BA%E6%96%87%E8%A7%A3%E8%AF%BB/Object-Detection/" itemprop="url" rel="index">
+                    <span itemprop="name">Object Detection</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%BA%E6%96%87%E8%A7%A3%E8%AF%BB/Object-Detection/DETR/" itemprop="url" rel="index">
+                    <span itemprop="name">DETR</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  584
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  2
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="Motivation"><a href="#Motivation" class="headerlink" title="Motivation"></a>Motivation</h3><p>设计一种基于 transformer 的物体检测框架，避免基于 CNN 方法的 NMS、anchor 等需要手工设计的环节，并且取得与 CNN 方法接近或更好的效果。</p>
+<hr>
+<h3 id="Methods"><a href="#Methods" class="headerlink" title="Methods"></a>Methods</h3><h4 id="模型整体结构"><a href="#模型整体结构" class="headerlink" title="模型整体结构"></a>模型整体结构</h4><p><img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2024-01-05%2010.21.07.png" alt="截屏2024-01-05 10.21.07.png"></p>
+<h4 id="Loss-计算"><a href="#Loss-计算" class="headerlink" title="Loss 计算"></a>Loss 计算</h4><h5 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h5><ol>
+<li>用匈牙利算法找到预测框与标注框之间的匹配关系：$L_{match}(y_i,\hat{y}_{\sigma(i)})=-\mathbb{1}_{c_i\neq\phi}\hat{p}_{\sigma(i)}(c_i)+\mathbb{1}_{c_i\neq\phi}L_{box}(b_i, \hat{b}_{\sigma(i)})$</li>
+<li>根据匹配后的 bounding box 对，计算 loss：</li>
+</ol>
+<script type="math/tex; mode=display">
+\begin{align*}
+L_{Hungarian(y,\hat{y})}&=\sum_{i=1}^N[-\log{\hat{p}_{\hat{\sigma}_{i}}}(c_i)+\mathbb{1}_{c_i\neq\phi}L_{box}(b_i, \hat{b}_{\hat\sigma(i)})] \\
+L_{box}(b_i, \hat{b}_{\sigma(i)})&=\lambda_{iou}L_{iou}(b_i, \hat{b}_{\sigma(i)})+\lambda_{L1}||b_i-\hat{b}_{\sigma(i)}||_1\\
+\end{align*}</script><h4 id="Encoder"><a href="#Encoder" class="headerlink" title="Encoder"></a>Encoder</h4><h5 id="主要步骤"><a href="#主要步骤" class="headerlink" title="主要步骤"></a>主要步骤</h5><ol>
+<li>对 CNN 输出的 feature map 降维</li>
+<li>把 feature map 的 HW 维展平，并加入 position embedding</li>
+<li>将处理后的特征经过由 multi-head self-attention 和 FFN 组成的 encoder 模块</li>
+</ol>
+<h4 id="Decoder"><a href="#Decoder" class="headerlink" title="Decoder"></a>Decoder</h4><h5 id="主要步骤-1"><a href="#主要步骤-1" class="headerlink" title="主要步骤"></a>主要步骤</h5><ol>
+<li>Query 之间进行 self attention</li>
+<li>Query 作为 q，图像特征作为 k，v 进行 multi-head attention</li>
+</ol>
+<hr>
+<h3 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h3><h4 id="数据"><a href="#数据" class="headerlink" title="数据"></a>数据</h4><p>COCO 2017</p>
+<pre><code>- 118 k 训练数据，5 k 验证集
+- 每张图像都有 bounding box 和全景分割标注
+- 平均每张训练图像由 7 个 instance，最多的图像有 63 个
+</code></pre><h4 id="与-Faster-R-CNN-比较"><a href="#与-Faster-R-CNN-比较" class="headerlink" title="与 Faster R-CNN 比较"></a>与 Faster R-CNN 比较</h4><p><img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2024-01-06%2016.13.51.png" alt="截屏2024-01-06 16.13.51.png"></p>
+<ol>
+<li>与 pytorch 自带的 faster r-cnn 相比，优化后的通常会有 1～2 个点的提升</li>
+<li>在 fps 相近的情况下，detr 的效果与 faster r-cnn 优化后的效果相当</li>
+<li>Detr 在大物体上的检出效果明显更好，反之在小物体上效果较差</li>
+</ol>
+<h4 id="消融实验"><a href="#消融实验" class="headerlink" title="消融实验"></a>消融实验</h4><h5 id="Encoder-层的数量"><a href="#Encoder-层的数量" class="headerlink" title="Encoder 层的数量"></a>Encoder 层的数量</h5><p><img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2024-01-06%2016.20.34.png" alt="截屏2024-01-06 16.20.34.png"></p>
+<ol>
+<li>Encoder 层对物体检出有比较重要的作用，尤其对于大物体检出</li>
+<li>增加 encoder 层，检出效果会随之提升</li>
+</ol>
+<h5 id="Decoder-层的数量"><a href="#Decoder-层的数量" class="headerlink" title="Decoder 层的数量"></a>Decoder 层的数量</h5><p><img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2024-01-06%2016.26.32.png" alt="截屏2024-01-06 16.26.32.png|400"></p>
+<ol>
+<li>Decoder 层数增加，检出效果会提升</li>
+<li>NMS 在仅有 1 层 decoder 的时候能带来显著提升，decoder 层数增加后，NMS 几乎没有效果</li>
+</ol>
+<h5 id="FFN-的效果"><a href="#FFN-的效果" class="headerlink" title="FFN 的效果"></a>FFN 的效果</h5><p>删掉 FFN 后，AP 下降了 2.3</p>
+<h5 id="Position-embedding-的效果"><a href="#Position-embedding-的效果" class="headerlink" title="Position embedding 的效果"></a>Position embedding 的效果</h5><p><img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2024-01-06%2016.49.41.png" alt="截屏2024-01-06 16.49.41.png"></p>
+<h5 id="不同-loss-的效果"><a href="#不同-loss-的效果" class="headerlink" title="不同 loss 的效果"></a>不同 loss 的效果</h5><p><img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2024-01-06%2016.54.14.png" alt="截屏2024-01-06 16.54.14.png"></p>
+<hr>
+<h3 id="个人总结"><a href="#个人总结" class="headerlink" title="个人总结"></a>个人总结</h3><h4 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h4><ol>
+<li>需要手工设计的模块较少，不需要后处理</li>
+<li>检测效果与 cnn 模型相当，且在大物体上效果突出</li>
+</ol>
+<h5 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h5><ol>
+<li>小物体检测效果不足</li>
+<li>训练时间更长</li>
+</ol>
+<link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://example.com/2024/01/04/Qwen-VL/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1926,7 +2173,7 @@ alt="截屏2023-10-07 14.04.03.png" /></p>
               
                 <a href="/archives/%7C%7Carchive">
               
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">7</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1937,7 +2184,7 @@ alt="截屏2023-10-07 14.04.03.png" /></p>
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-count">11</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -1948,7 +2195,7 @@ alt="截屏2023-10-07 14.04.03.png" /></p>
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -2002,7 +2249,7 @@ alt="截屏2023-10-07 14.04.03.png" /></p>
     
       <span class="post-meta-item-text">站点总字数&#58;</span>
     
-    <span title="站点总字数">5.3k</span>
+    <span title="站点总字数">5.9k</span>
   
 </div>
 

@@ -2,9 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">  
     
   <url>  
+    <loc>http://example.com/2024/01/06/DETR/</loc>  
+      
+    <lastmod>2024-01-06T09:15:15.360Z</lastmod>  
+      
+    <date>1704531798000</date>  
+    <title>DETR | Nicole</title>  
+      
+    <desc></desc>  
+  </url>  
+    
+  <url>  
     <loc>http://example.com/2024/01/04/Qwen-VL/</loc>  
       
-    <lastmod>2024-01-04T06:19:50.646Z</lastmod>  
+    <lastmod>2024-01-06T09:04:14.670Z</lastmod>  
       
     <date>1704349008000</date>  
     <title>Qwen-VL | Nicole</title>  
