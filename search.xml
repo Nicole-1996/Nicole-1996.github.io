@@ -553,7 +553,7 @@ L_{box}(b_i, \hat{b}_{\sigma(i)})&=\lambda_{iou}L_{iou}(b_i, \hat{b}_{\sigma(i)}
 <li>Encoder 层对物体检出有比较重要的作用，尤其对于大物体检出</li>
 <li>增加 encoder 层，检出效果会随之提升</li>
 </ol>
-<h5 id="Decoder-层的数量"><a href="#Decoder-层的数量" class="headerlink" title="Decoder 层的数量"></a>Decoder 层的数量</h5><p><img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2024-01-06%2016.26.32.png" alt="截屏2024-01-06 16.26.32.png|400"></p>
+<h5 id="Decoder-层的数量"><a href="#Decoder-层的数量" class="headerlink" title="Decoder 层的数量"></a>Decoder 层的数量</h5><p><img src="https://yumiwawa-1300546587.cos.ap-beijing.myqcloud.com/Obsidian/%E6%88%AA%E5%B1%8F2024-01-06%2016.26.32.png" width="40%" height="40%" /></p>
 <ol>
 <li>Decoder 层数增加，检出效果会提升</li>
 <li>NMS 在仅有 1 层 decoder 的时候能带来显著提升，decoder 层数增加后，NMS 几乎没有效果</li>
